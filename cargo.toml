@@ -1,0 +1,12 @@
+[package]
+name = "browser-engine-suburi"
+version = "0.0.1"
+authors = ["grgr-dkrk"]
+
+[[bin]]
+name = "browser-engine-suburi"
+path = "src/main.rs"
+
+[dependencies]
+getopts = "0.2"
+image = "0.23.13"
