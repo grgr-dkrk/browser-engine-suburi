@@ -45,13 +45,15 @@ pub enum Unit {
 }
 
 // RGB
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Default)]
 pub struct Color {
   pub r: u8,
   pub g: u8,
   pub b: u8,
   pub a: u8,
 }
+
+impl Copy for Color {}
 
 pub struct Parser {
   pub pos: usize,
