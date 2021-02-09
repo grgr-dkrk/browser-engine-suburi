@@ -31,7 +31,7 @@ pub struct Declaration {
 }
 
 // 値
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum Value {
   Keyword(String),   // 文字列
   Length(f32, Unit), // 数値
@@ -39,13 +39,13 @@ pub enum Value {
 }
 
 // 単位
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum Unit {
   Px,
 }
 
 // RGB
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Color {
   pub r: u8,
   pub g: u8,
@@ -77,6 +77,15 @@ fn valid_identifier_char(c: char) -> bool {
     'a'..='z' | 'A'..='Z' | '0'..='9' | '-' | '_' => true,
     _ => false,
   };
+}
+
+impl Value {
+  pub fn to_px(&self) -> f32 {
+    match *self {
+      Value::Length(f, Unit::Px) => f,
+      _ => 0.0
+    }
+  }
 }
 
 impl Parser {

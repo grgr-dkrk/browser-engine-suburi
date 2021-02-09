@@ -5,6 +5,7 @@ pub mod dom;
 pub mod html;
 pub mod css;
 pub mod style;
+pub mod layout;
 
 fn main() {
     let html = read_source("test.html".to_string());
@@ -14,7 +15,13 @@ fn main() {
     println!("DOMTree: {:?}", root_node);
     let stylesheet = css::parse(css);
     let style_root = style::style_tree(&root_node, &stylesheet);
-    println!("StyleTree: {:?}", style_root)
+    println!("StyleTree: {:?}", style_root);
+
+    let mut viewport: layout::Dimensions = Default::default();
+    viewport.content.width  = 800.0;
+    viewport.content.height = 600.0;
+    let layout_root = layout::layout_tree(&style_root, viewport);
+    println!("Layout: {:?}", layout_root);
 }
 
 fn read_source(filename: String) -> String {

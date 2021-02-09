@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 use dom::{Node, NodeType, ElementData};
 use css::{StyleSheet, Rule, Selector, SimpleSelector, Value, Specificity};
+use css::Value::Keyword;
 
 /**
  * HTML Parser + CSS Parser から生成した DOM ツリー, Rules ツリーから Style ツリーを生成するところ
@@ -81,3 +82,34 @@ pub fn style_tree<'a>(root: &'a Node, stylesheet: &'a StyleSheet) -> StyledNode<
   }
 }
 
+// display: block
+#[derive(PartialEq)]
+pub enum Display{
+  Inline,
+  Block,
+  None,
+}
+
+impl<'a> StyledNode<'a> {
+  // value を取得
+  pub fn value(&self, name: &str) -> Option<Value> {
+    return self.specified_values.get(name).map(|v| v.clone());
+  }
+  
+  // name の値を返す、なければ fallback_name を返す。どちらもない場合は default を返す。
+  pub fn lookup(&self, name: &str, fallback_name: &str, default: &Value) -> Value {
+    return self.value(name).unwrap_or_else(|| self.value(fallback_name).unwrap_or_else(|| default.clone()));
+  }
+
+  // display を設定
+  pub fn display(&self) -> Display {
+    match self.value("display") {
+      Some(Keyword(s)) => match &*s {
+        "block" => Display::Block,
+        "none" => Display::None,
+        _ => Display::Inline, // 初期値は inline
+      },
+      _ => Display::Inline
+    }
+  }
+}
